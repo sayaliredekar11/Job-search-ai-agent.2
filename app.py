@@ -9,8 +9,7 @@ from database.db import (
     save_resume,
     save_search,
     save_job,
-    save_chat_message,
-    get_chat_history,
+    
 )
 
 
@@ -143,7 +142,7 @@ st.divider()
 st.subheader("💬Chatbot")
 
 if "chat_history" not in st.session_state:
-    st.session_state.chat_history = get_chat_history(st.session_state.get("resume_id"))
+    st.session_state.chat_history = []
 
 for msg in st.session_state.chat_history:
     with st.chat_message(msg["role"]):
@@ -152,7 +151,7 @@ for msg in st.session_state.chat_history:
 user_message = st.chat_input("Ask about your resume, a job, or your career...")
 if user_message:
     st.session_state.chat_history.append({"role": "user", "content": user_message})
-    save_chat_message("user", user_message, st.session_state.get("resume_id"))
+    
 
     with st.spinner("Thinking..."):
         reply = get_chat_response(
@@ -163,7 +162,7 @@ if user_message:
         )
 
     st.session_state.chat_history.append({"role": "model", "content": reply})
-    save_chat_message("model", reply, st.session_state.get("resume_id"))
+    
     st.rerun()
 
     st.info("💡 Enter a job title and location above and click 'Search Jobs' to get started!")
